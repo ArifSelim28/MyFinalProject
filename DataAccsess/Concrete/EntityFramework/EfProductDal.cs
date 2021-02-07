@@ -1,38 +1,30 @@
-﻿using DataAccsess.Abstract;
+﻿using Core.DataAccess.EntityFramework;
+using DataAccsess.Abstract;
 using Entities.Concrete;
+using Entities.DTOs;
+using Microsoft.EntityFrameworkCore;
 using System;
 using System.Collections.Generic;
+using System.Linq;
+using System.Linq.Expressions;
 using System.Text;
 
 namespace DataAccsess.Concrete.EntityFramework
 {
-    public class EfProductDal
+    public class EfProductDal : EfEntityRepositoryBase<Product, NorthwindContext>, IProductDal
     {
-        public class EfProductDal : IProductDal
+        public List<ProductDetailDto> GetProductDetails()
         {
-            public void Add(Product product)
+            using (NorthwindContext context = new NorthwindContext())
             {
-                throw new NotImplementedException();
-            }
-
-            public void Delete(Product product)
-            {
-                throw new NotImplementedException();
-            }
-
-            public List<Product> GetAll()
-            {
-                throw new NotImplementedException();
-            }
-
-            public List<Product> GetAllByCategory(int categoryId)
-            {
-                throw new NotImplementedException();
-            }
-
-            public void Update(Product product)
-            {
-                throw new NotImplementedException();
+                var result = from p in context.Product
+                             join c in context.Categories
+                             on p.CategoryId equals c.CategoryId
+                             select new ProductDetailDto 
+                             {
+                                 ProductId = p.ProductId, ProductName = p.ProductName, CategoryName = c.CategoryName, UnitInStock = p.UnitInStock 
+                             };
+                return result.ToList();
             }
         }
     }

@@ -2,6 +2,7 @@
 using DataAccsess.Abstract;
 using DataAccsess.Concrete.EntityFramework;
 using Entities.Concrete;
+using Entities.DTOs;
 using System;
 using System.Collections.Generic;
 using System.Text;
@@ -11,23 +12,30 @@ namespace Bussiness.Concrete
     public class ProductManeger : IProductService
     {
         IProductDal _productDal;
-        private EfProductDal efProductDal;
 
         public ProductManeger(IProductDal productDal)
         {
             _productDal = productDal;
         }
 
-        public ProductManeger(EfProductDal efProductDal)
-        {
-            this.efProductDal = efProductDal;
-        }
-
-        public bool ProductName { get; set; }
-
         public List<Product> GetAll()
         {
             return _productDal.GetAll();
+        }
+
+        public List<Product> GetAllByCategoryId(int id)
+        {
+            return _productDal.GetAll(p => p.CategoryId == id);
+        }
+
+        public List<Product> GetByUnitPrice(decimal min, decimal max)
+        {
+            return _productDal.GetAll(p => p.UnitPrice >= min && p.UnitPrice <= max);
+        }
+
+        public List<ProductDetailDto> GetProductDetails()
+        {
+            return _productDal.GetProductDetails();
         }
     }
 }
