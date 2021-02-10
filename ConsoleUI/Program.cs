@@ -26,7 +26,16 @@ namespace ConsoleUI
         private static void ProductTest()
         {
             ProductManeger productManeger = new ProductManeger(new InMemoryProductDal());
-            foreach (var product in productManeger.GetProductDetails())
+
+            var result = productManeger.GetProductDetails();
+            if (result.Success==true)
+            {
+                foreach (var product in result.Data)
+                {
+                    Console.WriteLine(product.ProductName + "/" + product.CategoryName);
+                }
+            }
+            foreach (var product in productManeger.GetProductDetails().Data)
             {
                 Console.WriteLine(product.ProductName + "/" + product.CategoryName);
             }
